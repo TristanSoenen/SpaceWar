@@ -3,24 +3,37 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
+#include "EnhancedInputComponent.h"
 #include "PlayerSpaceCraft.generated.h"
 
 UCLASS()
-class SPACEWAR_API APlayerSpaceCraft : public AActor
+class SPACEWAR_API APlayerSpaceCraft : public APawn
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
 	APlayerSpaceCraft();
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput")
+	class UInputMappingContext* InputMapping;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput")
+	UInputAction* m_ShootAction;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+
+
+	void Shoot(const FInputActionValue& value);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
 
 };
