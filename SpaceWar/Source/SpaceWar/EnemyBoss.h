@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
 #include "EnemyBoss.generated.h"
 
 UCLASS()
-class SPACEWAR_API AEnemyBoss : public AActor
+class SPACEWAR_API AEnemyBoss : public APawn
 {
 	GENERATED_BODY()
 	
