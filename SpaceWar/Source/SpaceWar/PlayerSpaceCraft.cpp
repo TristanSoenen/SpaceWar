@@ -3,6 +3,7 @@
 
 #include "PlayerSpaceCraft.h"
 #include "EnhancedInputSubsystems.h"
+#include "Components/WidgetInteractionComponent.h"
 
 // Sets default values
 APlayerSpaceCraft::APlayerSpaceCraft()
@@ -16,7 +17,10 @@ APlayerSpaceCraft::APlayerSpaceCraft()
 void APlayerSpaceCraft::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	//Add mapping context
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+	Subsystem->AddMappingContext(InputMapping, 1);
 }
 
 // Called every frame
@@ -28,17 +32,10 @@ void APlayerSpaceCraft::Tick(float DeltaTime)
 
 void APlayerSpaceCraft::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
-	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
-    
-	Subsystem->ClearAllMappings();
-	Subsystem->AddMappingContext(InputMapping, 0);
+	//Binding actions
 	UEnhancedInputComponent* input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	if (input)
-	{
-		input->BindAction(m_ShootAction, ETriggerEvent::Triggered, this, &APlayerSpaceCraft::Shoot);
-	}
-
+	input->BindAction(m_PlayerMoveAction, ETriggerEvent::Triggered, this, &APlayerSpaceCraft::MovePlayerYZ);
+	input->BindAction(m_ShootAction, ETriggerEvent::Triggered, this, &APlayerSpaceCraft::Shoot);
 }
 
 void APlayerSpaceCraft::Shoot(const FInputActionValue& value)
@@ -46,5 +43,15 @@ void APlayerSpaceCraft::Shoot(const FInputActionValue& value)
 	if (value.Get<bool>() == false)
 		return;
 
-	UE_LOG(LogTemp, Warning, TEXT("Shoot"));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Shoot");
+}
+
+void APlayerSpaceCraft::MovePlayerYZ(const FInputActionValue &value)
+{
+	FVector2D inputVector = value.Get<FVector2D>();
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, inputVector.ToString());
+	FVector nextLocation = GetActorLocation();
+	float deltaTime = GetWorld()->GetDeltaSeconds();
+	nextLocation += FVector(0.0f, inputVector.X * 1000.0f * deltaTime, inputVector.Y * 1000.0f * deltaTime);
+	SetActorLocation(nextLocation);
 }
