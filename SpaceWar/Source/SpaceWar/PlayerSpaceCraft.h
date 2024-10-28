@@ -7,6 +7,8 @@
 #include "EnhancedInputComponent.h"
 #include "PlayerSpaceCraft.generated.h"
 
+
+class ABullet;
 UCLASS()
 class SPACEWAR_API APlayerSpaceCraft : public APawn
 {
@@ -36,6 +38,7 @@ private:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Bullet")
+	TSubclassOf<ABullet> m_BPBullet;
 
 };

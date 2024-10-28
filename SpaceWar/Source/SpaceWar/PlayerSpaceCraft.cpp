@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PlayerSpaceCraft.h"
+#include "SpaceWar/PlayerSpaceCraft.h"
+
+#include "Bullet.h"
 #include "EnhancedInputSubsystems.h"
-#include "Components/WidgetInteractionComponent.h"
 
 // Sets default values
 APlayerSpaceCraft::APlayerSpaceCraft()
@@ -42,8 +43,8 @@ void APlayerSpaceCraft::Shoot(const FInputActionValue& value)
 {
 	if (value.Get<bool>() == false)
 		return;
-
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Shoot");
+	
+	GetWorld()->SpawnActor<ABullet>(m_BPBullet, GetActorLocation(), GetActorRotation());
 }
 
 void APlayerSpaceCraft::MovePlayerYZ(const FInputActionValue &value)
