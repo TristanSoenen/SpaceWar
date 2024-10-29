@@ -25,7 +25,7 @@ void ABullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	FVector nextPosition = GetActorLocation();
-	nextPosition += GetActorUpVector() * m_Speed * DeltaTime;
+	nextPosition += m_Direction * m_Speed * DeltaTime;
 	SetActorLocation(nextPosition);
 }
 

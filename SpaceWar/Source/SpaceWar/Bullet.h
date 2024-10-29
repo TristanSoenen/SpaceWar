@@ -22,7 +22,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void SetDirection(FVector Direction) { m_Direction = Direction; }
 private:
 	UPROPERTY(EditAnywhere)
 	float m_Speed;
+	FVector m_Direction{};
 };
