@@ -23,12 +23,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void SetKillDelay(float delay) { m_KillDelay = delay; }
-	void InitializeBullet(bool playerFired, float speed, const FVector& direction);
+	void InitializeBullet(bool playerFired, float speed, const FVector& direction, int damage);
 	
 	UFUNCTION()
 	void OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	void SetBulletMaterial();
+	void SetBulletMaterial() const;
 private:
 	//functions 
 	void CheckPlayerHit(AActor* other);

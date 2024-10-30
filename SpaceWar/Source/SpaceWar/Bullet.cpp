@@ -23,14 +23,15 @@ void ABullet::BeginPlay()
 		m_Mesh->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OnOverlapStart);
 }
 
-void ABullet::InitializeBullet(bool playerFired, float speed, const FVector &direction)
+void ABullet::InitializeBullet(bool playerFired, float speed, const FVector &direction, int damage)
 {
 	m_FiredByPlayer = playerFired;
 	m_Direction = direction;
 	m_Speed = speed;
+	m_DamageToPlayer = damage;
 }
 
-void ABullet::SetBulletMaterial()
+void ABullet::SetBulletMaterial() const
 {
 	if(m_Mesh == nullptr)
 		return;

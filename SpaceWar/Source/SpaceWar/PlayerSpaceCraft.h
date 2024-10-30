@@ -9,6 +9,7 @@
 
 
 class ABullet;
+struct FAllBulletAndEnemyData;
 UCLASS()
 class SPACEWAR_API APlayerSpaceCraft : public APawn
 {
@@ -43,6 +44,9 @@ public:
 	void ReduceHealth(int damage);
 	void IncrementScore(int score);
 private:
+	FAllBulletAndEnemyData* m_Data{};
+	UPROPERTY(EditAnywhere, Category = "Data")
+	UDataTable* m_DataTable;
 	int m_Health = 100;
 	int m_Score = 0;
 };

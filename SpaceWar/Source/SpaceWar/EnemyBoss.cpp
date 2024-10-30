@@ -5,6 +5,7 @@
 
 #include "Bullet.h"
 #include "PlayerSpaceCraft.h"
+#include "BulletData.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -18,15 +19,17 @@ AEnemyBoss::AEnemyBoss()
 void AEnemyBoss::BeginPlay()
 {
 	Super::BeginPlay();
+	const FString contextWarning ={"Row not Found in data Table" };
+	m_Data = m_DataTable->FindRow<FAllBulletAndEnemyData>("Enemy1", contextWarning, true);
 }
 
 // Called every frame
 void AEnemyBoss::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//makes the spawn circle rotate so the spawn points arent the same
-	m_RotationAngle += m_RotationSpeed * DeltaTime;
-	if(m_RotationAngle > 360) m_RotationAngle =0;
+	//makes the spawn circle rotate so the spawn points aren't the same
+	m_RotationAngle += m_Data->RotationSpeed * DeltaTime;
+	if(m_RotationAngle > 360) m_RotationAngle = 0;
 	SpawnBullets();
 
 	//goes toward the player
@@ -40,27 +43,26 @@ void AEnemyBoss::SpawnBullets()
 
 	m_CanFire = false;
 
-	for(int i = 0; i < m_SpawnPoints; i++)
+	for(int i = 0; i < m_Data->BulletSpawnAmount; i++)
 	{
-		float angle = (2 * PI / m_SpawnPoints) * i + m_RotationAngle;
+		float angle = (2 * PI / m_Data->BulletSpawnAmount) * i + m_RotationAngle;
 		float z = m_Radius * cos(angle);
 		float y = m_Radius * sin(angle);
 		FVector spawnPoint = GetActorLocation() + FVector(0, y, z);
 		FTransform spawnTransform;
 		spawnTransform.SetLocation(spawnPoint);
-		auto bullet =  GetWorld()->SpawnActorDeferred<ABullet>(m_BPBullet,spawnTransform);
 		
-		if(bullet)
+		if(auto bullet =  GetWorld()->SpawnActorDeferred<ABullet>(m_BPBullet,spawnTransform))
 		{
 			FVector direction = FVector(0, sin(angle), cos(angle));
 			direction.Normalize();
-			bullet->InitializeBullet(false, 200.0f, direction);
+			bullet->InitializeBullet(false, m_Data->Speed, direction, m_Data->Damage);
 			bullet->FinishSpawning(spawnTransform);
 			bullet->SetBulletMaterial();
 		}
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(m_BulletSpawnerTimer, this, &AEnemyBoss::ResetBulletSpawnTimer, m_SpawnDelay, false);
+	GetWorld()->GetTimerManager().SetTimer(m_BulletSpawnerTimer, this, &AEnemyBoss::ResetBulletSpawnTimer, m_Data->SpawnDelay, false);
 }
 
 void AEnemyBoss::ResetBulletSpawnTimer()
@@ -79,7 +81,7 @@ void AEnemyBoss::SimpleSeekBehavior(float deltaTime)
 	FVector direction = playerLocation - GetActorLocation();
 	direction.Normalize();
 	FVector nextPos = GetActorLocation();
-	nextPos += direction * m_MovementSpeed * deltaTime;
+	nextPos += direction * m_Data->UnitMoveSpeed * deltaTime;
 	SetActorLocation(nextPos);
 }
 
@@ -89,6 +91,6 @@ void AEnemyBoss::KillEnemy()
 	if(player == nullptr)
 		return;
 
-	player->IncrementScore(m_ScoreOnKill);
+	player->IncrementScore(m_Data->ScoreOnKill);
 	Destroy();
 }

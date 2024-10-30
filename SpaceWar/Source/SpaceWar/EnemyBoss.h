@@ -8,6 +8,10 @@
 
 
 
+
+
+class ABulletData;
+struct FAllBulletAndEnemyData;
 class ABullet;
 UCLASS()
 class SPACEWAR_API AEnemyBoss : public APawn
@@ -39,14 +43,13 @@ private:
 	bool m_CanFire = true;
 	void ResetBulletSpawnTimer();
 	float m_SpawnDelay = 1.0f;
-
-	//Spawner
-	void SpawnBullets();
-	float m_RotationSpeed = 0.2f;
-	int m_SpawnPoints = 4;
+	
+	FAllBulletAndEnemyData* m_Data{};
+	UPROPERTY(EditAnywhere, Category = "Data")
+	UDataTable* m_DataTable;
 	float m_Radius = 100.0f;
 	float m_RotationAngle = 0.0f;
 
-	float m_MovementSpeed = 100.0f;
-	int m_ScoreOnKill = 20;
+	//Spawner
+	void SpawnBullets();
 };

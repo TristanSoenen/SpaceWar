@@ -2,8 +2,8 @@
 
 
 #include "SpaceWar/PlayerSpaceCraft.h"
-
 #include "Bullet.h"
+#include "BulletData.h"
 #include "EnhancedInputSubsystems.h"
 
 // Sets default values
@@ -22,6 +22,8 @@ void APlayerSpaceCraft::BeginPlay()
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
 	Subsystem->AddMappingContext(InputMapping, 1);
+	const FString contextWarning ={"Row not Found in data Table" };
+	m_Data = m_DataTable->FindRow<FAllBulletAndEnemyData>("Player", contextWarning, true);
 }
 
 // Called every frame
@@ -44,15 +46,14 @@ void APlayerSpaceCraft::Shoot(const FInputActionValue& value)
 	if (value.Get<bool>() == false)
 		return;
 	
-	FTransform spawnpoint;
-	spawnpoint.SetLocation( GetActorLocation() +  GetActorUpVector() * 150);
-	auto bullet = GetWorld()->SpawnActorDeferred<ABullet>(m_BPBullet, spawnpoint);
-
-	if(bullet)
+	FTransform spawnPoint;
+	spawnPoint.SetLocation( GetActorLocation() +  GetActorUpVector() * 150);
+	
+	if(auto bullet = GetWorld()->SpawnActorDeferred<ABullet>(m_BPBullet, spawnPoint))
 	{
 		FVector direction = GetActorUpVector();
-		bullet->InitializeBullet( true, 500.0f, direction);
-		bullet->FinishSpawning(spawnpoint);
+		bullet->InitializeBullet( true, m_Data->Speed, direction, m_Data->Damage);
+		bullet->FinishSpawning(spawnPoint);
 		bullet->SetBulletMaterial();
 	}
 }
@@ -62,7 +63,7 @@ void APlayerSpaceCraft::MovePlayerYZ(const FInputActionValue &value)
 	FVector2D inputVector = value.Get<FVector2D>();
 	FVector nextLocation = GetActorLocation();
 	float deltaTime = GetWorld()->GetDeltaSeconds();
-	nextLocation += FVector(0.0f, inputVector.X * 250.0f * deltaTime, inputVector.Y * 250.0f * deltaTime);
+	nextLocation += FVector(0.0f, inputVector.X * m_Data->UnitMoveSpeed * deltaTime, inputVector.Y * m_Data->UnitMoveSpeed * deltaTime);
 	SetActorLocation(nextLocation);
 }
 
