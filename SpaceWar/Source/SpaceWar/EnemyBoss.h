@@ -29,6 +29,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Bullet")
 	TSubclassOf<ABullet> m_BPBullet;
+	void KillEnemy();
 private:
 	//Behavior functions
 	void SimpleSeekBehavior(float deltaTime);
@@ -47,4 +48,5 @@ private:
 	float m_RotationAngle = 0.0f;
 
 	float m_MovementSpeed = 100.0f;
+	int m_ScoreOnKill = 20;
 };
