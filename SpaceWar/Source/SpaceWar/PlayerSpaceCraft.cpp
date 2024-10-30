@@ -44,15 +44,37 @@ void APlayerSpaceCraft::Shoot(const FInputActionValue& value)
 	if (value.Get<bool>() == false)
 		return;
 	
-	GetWorld()->SpawnActor<ABullet>(m_BPBullet, GetActorLocation(), GetActorRotation());
+	FTransform spawnpoint;
+	spawnpoint.SetLocation( GetActorLocation() +  GetActorUpVector() * 150);
+	auto bullet = GetWorld()->SpawnActorDeferred<ABullet>(m_BPBullet, spawnpoint);
+
+	if(bullet)
+	{
+		FVector direction = GetActorUpVector();
+		bullet->InitializeBullet( true, 500.0f, direction);
+		bullet->FinishSpawning(spawnpoint);
+		bullet->SetBulletMaterial();
+	}
 }
 
 void APlayerSpaceCraft::MovePlayerYZ(const FInputActionValue &value)
 {
 	FVector2D inputVector = value.Get<FVector2D>();
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, inputVector.ToString());
 	FVector nextLocation = GetActorLocation();
 	float deltaTime = GetWorld()->GetDeltaSeconds();
-	nextLocation += FVector(0.0f, inputVector.X * 1000.0f * deltaTime, inputVector.Y * 1000.0f * deltaTime);
+	nextLocation += FVector(0.0f, inputVector.X * 250.0f * deltaTime, inputVector.Y * 250.0f * deltaTime);
 	SetActorLocation(nextLocation);
+}
+
+void APlayerSpaceCraft::ReduceHealth(int damage)
+{
+	m_Health -= damage;
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Health Changed");
+	if(m_Health < 0)
+		Destroy();
+}
+
+void APlayerSpaceCraft::IncrementScore(int score)
+{
+	m_Score += score;
 }

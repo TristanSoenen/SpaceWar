@@ -18,8 +18,7 @@ public:
 	// Sets default values for this actor's properties
 	APlayerSpaceCraft();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput")
 	class UInputMappingContext* InputMapping;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput")
@@ -41,4 +40,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Bullet")
 	TSubclassOf<ABullet> m_BPBullet;
 
+	void ReduceHealth(int damage);
+	void IncrementScore(int score);
+private:
+	int m_Health = 100;
+	int m_Score = 0;
 };
