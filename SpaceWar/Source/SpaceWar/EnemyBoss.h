@@ -4,14 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "BulletData.h"
 #include "EnemyBoss.generated.h"
 
-
-
-
-
 class ABulletData;
-struct FAllBulletAndEnemyData;
 class ABullet;
 UCLASS()
 class SPACEWAR_API AEnemyBoss : public APawn
@@ -34,6 +30,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Bullet")
 	TSubclassOf<ABullet> m_BPBullet;
 	void KillEnemy();
+	void InitializeEnemy(FAllBulletAndEnemyData* DataFromTable){m_Data = DataFromTable;}
 private:
 	//Behavior functions
 	void SimpleSeekBehavior(float deltaTime);

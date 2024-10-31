@@ -5,7 +5,6 @@
 
 #include "Bullet.h"
 #include "PlayerSpaceCraft.h"
-#include "BulletData.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -19,8 +18,8 @@ AEnemyBoss::AEnemyBoss()
 void AEnemyBoss::BeginPlay()
 {
 	Super::BeginPlay();
-	const FString contextWarning ={"Row not Found in data Table" };
-	m_Data = m_DataTable->FindRow<FAllBulletAndEnemyData>("Enemy1", contextWarning, true);
+	//const FString contextWarning ={"Row not Found in data Table" };
+	//m_Data = m_DataTable->FindRow<FAllBulletAndEnemyData>("Enemy1", contextWarning, true);
 }
 
 // Called every frame
@@ -94,3 +93,4 @@ void AEnemyBoss::KillEnemy()
 	player->IncrementScore(m_Data->ScoreOnKill);
 	Destroy();
 }
+
