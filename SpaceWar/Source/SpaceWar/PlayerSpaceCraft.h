@@ -49,4 +49,9 @@ private:
 	UDataTable* m_DataTable;
 	int m_Health = 100;
 	int m_Score = 0;
+
+	//fire timer
+	FTimerHandle m_FireTimer;
+	bool m_CanFire = true;
+	void ResetFireTimer();
 };

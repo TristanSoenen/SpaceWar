@@ -43,9 +43,10 @@ void APlayerSpaceCraft::SetupPlayerInputComponent(class UInputComponent* PlayerI
 
 void APlayerSpaceCraft::Shoot(const FInputActionValue& value)
 {
-	if (value.Get<bool>() == false)
+	if (value.Get<bool>() == false || m_CanFire == false)
 		return;
-	
+
+	m_CanFire = false;
 	FTransform spawnPoint;
 	spawnPoint.SetLocation( GetActorLocation() +  GetActorUpVector() * 150);
 	
@@ -56,6 +57,8 @@ void APlayerSpaceCraft::Shoot(const FInputActionValue& value)
 		bullet->FinishSpawning(spawnPoint);
 		bullet->SetBulletMaterial();
 	}
+
+	GetWorld()->GetTimerManager().SetTimer(m_FireTimer, this, &APlayerSpaceCraft::ResetFireTimer, m_Data->SpawnDelay, false);
 }
 
 void APlayerSpaceCraft::MovePlayerYZ(const FInputActionValue &value)
@@ -78,4 +81,10 @@ void APlayerSpaceCraft::ReduceHealth(int damage)
 void APlayerSpaceCraft::IncrementScore(int score)
 {
 	m_Score += score;
+}
+
+void APlayerSpaceCraft::ResetFireTimer()
+{
+	m_CanFire = true;
+	GetWorld()->GetTimerManager().ClearTimer(m_FireTimer);
 }

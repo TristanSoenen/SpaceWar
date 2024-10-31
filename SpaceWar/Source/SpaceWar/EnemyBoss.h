@@ -42,7 +42,6 @@ private:
 	FTimerHandle m_BulletSpawnerTimer;
 	bool m_CanFire = true;
 	void ResetBulletSpawnTimer();
-	float m_SpawnDelay = 1.0f;
 	
 	FAllBulletAndEnemyData* m_Data{};
 	UPROPERTY(EditAnywhere, Category = "Data")
