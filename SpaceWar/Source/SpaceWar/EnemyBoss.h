@@ -9,6 +9,7 @@
 
 class ABulletData;
 class ABullet;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDeath);
 UCLASS()
 class SPACEWAR_API AEnemyBoss : public APawn
 {
@@ -31,6 +32,8 @@ public:
 	TSubclassOf<ABullet> m_BPBullet;
 	void KillEnemy();
 	void InitializeEnemy(FAllBulletAndEnemyData* DataFromTable){m_Data = DataFromTable;}
+
+	FOnEnemyDeath m_OnEnemyDeath;
 private:
 	//Behavior functions
 	void SimpleSeekBehavior(float deltaTime);

@@ -26,22 +26,21 @@ public:
 	virtual void Tick(float DeltaTime) override;
 private:
 	UPROPERTY(EditAnywhere, Category = "Spawner")
-	int m_RectWidth;
+	int m_SpawnHeight;
 	UPROPERTY(EditAnywhere, Category = "Spawner")
-	int m_RectHeight;
+	int m_SpawnWidth;
 	UPROPERTY(EditAnywhere, Category = "Spawner")
 	int m_EnemySpawnAmount;
 	UPROPERTY(EditAnywhere, Category = "Spawner")
 	UDataTable* m_DataTable;
 	UPROPERTY(EditAnywhere, Category = "Spawner")
 	TSubclassOf<AEnemyBoss> m_BPEnemyBoss;
-	TArray<FVector> m_SpawnPoints;
-	TArray<AEnemyBoss*> m_Enemies;
-	//TArray<FName> m_RowNamesDataTable;
 	TArray<FAllBulletAndEnemyData*> m_AllEnemyData;
-
+	TArray<AEnemyBoss*> m_Enemies;
+	FVector m_SpawnPositionXZ;
+	FRandomStream m_Rand;
 	//Functions
-	void AddSpawnPoints();
 	void AddRowNames();
+	UFUNCTION()
 	void SpawnEnemy();
 };

@@ -2,7 +2,6 @@
 
 
 #include "SpaceWar/EnemySpawner.h"
-
 #include "EnemyBoss.h"
 
 // Sets default values
@@ -10,16 +9,16 @@ AEnemySpawner::AEnemySpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
 void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
-
+	m_SpawnPositionXZ = GetActorLocation();
+	m_SpawnPositionXZ.Z = m_SpawnPositionXZ.Z + m_SpawnHeight;
+	
 	AddRowNames();
-	AddSpawnPoints();
 	for(int i = 0; i < m_EnemySpawnAmount; i++)
 	{
 		SpawnEnemy();
@@ -30,29 +29,6 @@ void AEnemySpawner::BeginPlay()
 void AEnemySpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-}
-
-void AEnemySpawner::AddSpawnPoints()
-{
-	FVector SpawnLocation = GetActorLocation();
-	SpawnLocation.Y -= m_RectWidth / 2;
-	SpawnLocation.Z += m_RectHeight / 2;
-	for(int i = 0; i < 2; i++)
-	{
-		for(int j = 0; j < 3; j++)
-		{
-			SpawnLocation.Y += (m_RectWidth / 2) * j;
-			m_SpawnPoints.Add(SpawnLocation);
-		}
-		SpawnLocation.Y -= m_RectWidth;
-		SpawnLocation.Z -= m_RectHeight;
-	}
-	SpawnLocation.Y -= m_RectWidth;
-	SpawnLocation.Z += m_RectHeight / 2;
-	m_SpawnPoints.Add(SpawnLocation);
-	SpawnLocation.Y += m_RectWidth;
-	m_SpawnPoints.Add(SpawnLocation);
 }
 
 void AEnemySpawner::AddRowNames()
@@ -60,7 +36,9 @@ void AEnemySpawner::AddRowNames()
 	const FString contextWarning ={"Row not Found in data Table" };
 	for(int i = 0; i < 4; i++)
 	{
-		if(auto data = m_DataTable->FindRow<FAllBulletAndEnemyData>("Enemy0", contextWarning, true))
+		//Chat gpt helped with the FName
+		FName enemy = FName(*("Enemy" + FString::FromInt(i)));
+		if(auto data = m_DataTable->FindRow<FAllBulletAndEnemyData>(enemy, contextWarning, true))
 			m_AllEnemyData.Add(data);
 	}
 }
@@ -68,12 +46,14 @@ void AEnemySpawner::AddRowNames()
 void AEnemySpawner::SpawnEnemy()
 {
 	FTransform spawnTransform;
-	spawnTransform.SetLocation(m_SpawnPoints[rand() % m_SpawnPoints.Num()]);
+	float randPos = m_Rand.FRandRange(m_SpawnPositionXZ.Y - m_SpawnWidth / 2, m_SpawnPositionXZ.Y + m_SpawnWidth / 2);
+	spawnTransform.SetLocation(FVector(m_SpawnPositionXZ.X, randPos, m_SpawnPositionXZ.Z));
 	if(auto enemy = GetWorld()->SpawnActorDeferred<AEnemyBoss>(m_BPEnemyBoss, spawnTransform))
 	{
-		enemy->InitializeEnemy(m_AllEnemyData[rand() % 4]);
+		int32 idx = m_Rand.RandRange(0, m_AllEnemyData.Num() - 1);
+		enemy->InitializeEnemy(m_AllEnemyData[idx]);
 		enemy->FinishSpawning(spawnTransform);
+		enemy->m_OnEnemyDeath.AddDynamic(this, &AEnemySpawner::SpawnEnemy);
 		m_Enemies.Add(enemy);
 	}
 }
-
