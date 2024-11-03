@@ -10,6 +10,10 @@
 
 class ABullet;
 struct FAllBulletAndEnemyData;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreChanged, int, Score);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, int, Health);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
 UCLASS()
 class SPACEWAR_API APlayerSpaceCraft : public APawn
 {
@@ -26,6 +30,10 @@ public:
 	TObjectPtr<UInputAction> m_ShootAction;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput")
 	TObjectPtr<UInputAction> m_PlayerMoveAction;
+
+	FOnScoreChanged		m_OnScoreChanged;
+	FOnHealthChanged	m_OnHealthChanged;
+	FOnPlayerDeath		m_OnPlayerDeath;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -49,6 +57,7 @@ private:
 	UDataTable* m_DataTable;
 	int m_Health = 100;
 	int m_Score = 0;
+	const int m_ShootOffset = 150;
 
 	//fire timer
 	FTimerHandle m_FireTimer;

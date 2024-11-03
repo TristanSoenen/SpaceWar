@@ -5,6 +5,7 @@
 #include "Bullet.h"
 #include "BulletData.h"
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayerSpaceCraft::APlayerSpaceCraft()
@@ -48,7 +49,7 @@ void APlayerSpaceCraft::Shoot(const FInputActionValue& value)
 
 	m_CanFire = false;
 	FTransform spawnPoint;
-	spawnPoint.SetLocation( GetActorLocation() +  GetActorUpVector() * 150);
+	spawnPoint.SetLocation( GetActorLocation() +  GetActorUpVector() * m_ShootOffset);
 	
 	if(auto bullet = GetWorld()->SpawnActorDeferred<ABullet>(m_BPBullet, spawnPoint))
 	{
@@ -73,14 +74,18 @@ void APlayerSpaceCraft::MovePlayerYZ(const FInputActionValue &value)
 void APlayerSpaceCraft::ReduceHealth(int damage)
 {
 	m_Health -= damage;
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Health Changed");
-	if(m_Health < 0)
+	m_OnHealthChanged.Broadcast(m_Health);
+	if(m_Health <= 0)
+	{
+		m_OnPlayerDeath.Broadcast();
 		Destroy();
+	}
 }
 
 void APlayerSpaceCraft::IncrementScore(int score)
 {
 	m_Score += score;
+	m_OnScoreChanged.Broadcast(m_Score);
 }
 
 void APlayerSpaceCraft::ResetFireTimer()
