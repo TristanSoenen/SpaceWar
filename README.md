@@ -43,9 +43,6 @@ All the aprameter to make a unique pattern are in the data table. damage, score 
 ![DataStruct](Images/StructDataTable.PNG)
 
 # Still Todo
-* HP Hud
-* Score Hud
-* Replay Button
-* Quit Button
 * Enemy Spawner also via the data table
 * locking the player in a certain spot
+* Show how many pts the player got on the hud
