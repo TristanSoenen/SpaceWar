@@ -41,8 +41,3 @@ Player collision Function:<br>
 All the aprameter to make a unique pattern are in the data table. damage, score and unitmovementspeed are also in the data table for if i need to change values all the values are in one place.
 <br>
 ![DataStruct](Images/StructDataTable.PNG)
-
-# Still Todo
-* Enemy Spawner also via the data table
-* locking the player in a certain spot
-* Show how many pts the player got on the hud
