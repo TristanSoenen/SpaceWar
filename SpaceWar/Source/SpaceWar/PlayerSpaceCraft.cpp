@@ -25,6 +25,7 @@ void APlayerSpaceCraft::BeginPlay()
 	Subsystem->AddMappingContext(InputMapping, 1);
 	const FString contextWarning ={"Row not Found in data Table" };
 	m_Data = m_DataTable->FindRow<FAllBulletAndEnemyData>("Player", contextWarning, true);
+	m_OriginalPosition = GetActorLocation();
 }
 
 // Called every frame
@@ -64,11 +65,12 @@ void APlayerSpaceCraft::Shoot(const FInputActionValue& value)
 
 void APlayerSpaceCraft::MovePlayerYZ(const FInputActionValue &value)
 {
-	FVector2D inputVector = value.Get<FVector2D>();
+	float input = value.Get<float>();
 	FVector nextLocation = GetActorLocation();
 	float deltaTime = GetWorld()->GetDeltaSeconds();
-	nextLocation += FVector(0.0f, inputVector.X * m_Data->UnitMoveSpeed * deltaTime, inputVector.Y * m_Data->UnitMoveSpeed * deltaTime);
-	SetActorLocation(nextLocation);
+	nextLocation += FVector(0.0f, input * m_Data->UnitMoveSpeed * deltaTime, 0.0f);
+	if(nextLocation.Y > m_OriginalPosition.Y - m_PlayerOffset && nextLocation.Y < m_OriginalPosition.Y + m_PlayerOffset)
+		SetActorLocation(nextLocation);
 }
 
 void APlayerSpaceCraft::ReduceHealth(int damage)

@@ -48,7 +48,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Bullet")
 	TSubclassOf<ABullet> m_BPBullet;
-
+	int GetHealth(){return m_Health;}
 	void ReduceHealth(int damage);
 	void IncrementScore(int score);
 private:
@@ -58,6 +58,8 @@ private:
 	int m_Health = 100;
 	int m_Score = 0;
 	const int m_ShootOffset = 150;
+	FVector m_OriginalPosition;
+	const int m_PlayerOffset = 2250;
 
 	//fire timer
 	FTimerHandle m_FireTimer;

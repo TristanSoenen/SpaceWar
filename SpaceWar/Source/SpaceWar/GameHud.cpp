@@ -8,24 +8,24 @@
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 
-void UGameHud::NativeConstruct()
-{
+void UGameHud::NativeConstruct() {
     m_PlayAgainButton->OnClicked.AddDynamic(this, &UGameHud::PlayAgainButtonClicked);
     m_QuitButton->OnClicked.AddDynamic(this, &UGameHud::QuitButtonClicked);
 
     m_PlayAgainButton->SetVisibility(ESlateVisibility::Hidden);
     m_QuitButton->SetVisibility(ESlateVisibility::Hidden);
 
-    m_ScoreTextNum->SetText(FText::AsNumber(0));
-    m_ScoreText->SetText(FText::FromString("Hp: "));
-    m_HealthTextNum->SetText(FText::AsNumber(100));
-    m_HealthText->SetText(FText::FromString("PTS: "));
-
     APlayerSpaceCraft* player = Cast<APlayerSpaceCraft>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
     player->m_OnHealthChanged.AddDynamic(this, &UGameHud::SetHealthHud);
     player->m_OnScoreChanged.AddDynamic(this, &UGameHud::ChangeScoreHud);
     player->m_OnPlayerDeath.AddDynamic(this, &UGameHud::ShowGameHud);
+
+    m_ScoreTextNum->SetText(FText::AsNumber(0));
+    m_ScoreText->SetText(FText::FromString("Hp: "));
+    m_HealthTextNum->SetText(FText::AsNumber(player->GetHealth()));
+    m_HealthText->SetText(FText::FromString("PTS: "));
 }
+
 
 void UGameHud::ChangeScoreHud(int Score)
 {
