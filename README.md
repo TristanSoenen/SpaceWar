@@ -4,7 +4,7 @@ Space War is a small bullet hell game.
 In this small side project i want to learn to work with unreal c++. So i am making a little space game where you shoot enemies and get points. The game keeps going until you die or at the moment when you just kill a enemy.
 
 # Result
-![Result](Images/Pattern.PNG)
+![Result](Images/SpaceWarResultGif%20.gif.)
 ## The Enemy 
 ### Behavior:
 The enemy his behavior is simple just a seek behavior that goes towards the player.
