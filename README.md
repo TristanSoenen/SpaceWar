@@ -4,7 +4,7 @@ Space War is a small bullet hell game.
 In this small side project i want to learn to work with unreal c++. So i am making a little space game where you shoot enemies and get points. The game keeps going until you die or at the moment when you just kill a enemy.
 
 # Result
-![Result](Images/SpaceWarResultGif%20.gif.)
+![Result][def]
 ## The Enemy 
 ### Behavior:
 The enemy his behavior is simple just a seek behavior that goes towards the player.
@@ -41,3 +41,6 @@ Player collision Function:<br>
 All the aprameter to make a unique pattern are in the data table. damage, score and unitmovementspeed are also in the data table for if i need to change values all the values are in one place.
 <br>
 ![DataStruct](Images/StructDataTable.PNG)
+
+
+[def]: Images/SpaceWarResultGif.gif
