@@ -23,7 +23,7 @@ The bullet spawn function of the enemy:
 ![BulletSpawnCode](Images/SpawnBulletFunction.PNG)
 
 ## The Player
-The player uses the enhacned input system of unreal. The movement is with WASD and space bar to shoot a bullet in front of him.
+The player uses the enhacned input system of unreal. The movement is with A && D and space bar to shoot a bullet in front of him.
 
 ## The bullets
 After a bullet is spawned an initialized by a player or enemy a timer starts. After the Delay the bullet gets destroyed. We assign a different material to the bullet depending if it is shot by the player or enemy.<br>
