@@ -42,5 +42,11 @@ All the aprameter to make a unique pattern are in the data table. damage, score 
 <br>
 ![DataStruct](Images/StructDataTable.PNG)
 
+## Respawn and spawning
+
+![EnemySpawn](Images/SpawnCode.PNG)<br>
+
+the enemie gets spawned at a random width. We initialize the enemy with one off the random data entries for the enemies.
+The enemy has a delegate where i add my respawn function to so when the enemy broadcast hes about to die i spawn a new enemy.
 
 [def]: Images/SpaceWarResultGif.gif
